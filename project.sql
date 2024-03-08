@@ -67,3 +67,15 @@ select e.employee_id    emp_id,
   inner join departments d
      on e.department_id = d.department_id
 
+
+--Maximum and Minimum salary in their Respective Departments
+ 
+ select x.*
+  from employees e
+  join (select employee_id,first_name ,salary,department_id,
+               max(salary) over(partition by department_id) as max_sal,
+               min(salary) over(partition by department_id) as min_sal
+          from employees) x
+    on e.employee_id = x.employee_id
+   and (e.salary = x.max_sal or e.salary = x.min_sal)
+ order by e.department_id, e.salary;
